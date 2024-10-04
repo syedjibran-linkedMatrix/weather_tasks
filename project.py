@@ -5,5 +5,3 @@ with open("demo.txt", "r") as file:
 def add(a,b):
     return a+b
 
-def multiply(a,b):
-    return a*b
