@@ -1,10 +1,15 @@
 # Task: Find average temperature and wind data, and export to CSV
 import pandas as pd
-from data_utils import *
+from ArgParser_class import ArgParser
 
-# Initialize argument parser and load dataset
-args = initialize_args()
-df = load_dataset(args.input_file)
+args_parser = ArgParser()
+args = args_parser.parse_args()
+
+# Load the dataset
+df = pd.read_csv(args.input_file)
+
+# Convert date column to datetime
+df['Date.Full'] = pd.to_datetime(df['Date.Full'])
 
 
 # Filter by date range
@@ -31,4 +36,6 @@ avg_data = pd.DataFrame({
     'Average Wind Speed': [avg_wind_speed]
 })
 avg_data.to_csv(args.output_file, index=False)
+
+
 
