@@ -1,7 +1,8 @@
-#Task: Find the day with highest temperature
+# Task: Find the day with highest temperature
 import pandas as pd
 from ArgParser_class import ArgParser
 
+# Parse command-line arguments
 args_parser = ArgParser()
 args = args_parser.parse_args()
 
@@ -9,7 +10,8 @@ args = args_parser.parse_args()
 df = pd.read_csv(args.input_file)
 
 # Convert date column to datetime
-df['Date.Full'] = pd.to_df['Date.Full'] = pd.to_datetime(df['Date.Full'])
+df['Date.Full'] = pd.to_datetime(df['Date.Full'])
+
 # Filter by date range
 start_date = pd.to_datetime(args.start_date)
 end_date = pd.to_datetime(args.end_date)

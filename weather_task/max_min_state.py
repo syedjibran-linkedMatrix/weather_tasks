@@ -2,6 +2,7 @@
 import pandas as pd
 from ArgParser_class import ArgParser
 
+# Initialize argument parser
 args_parser = ArgParser()
 args = args_parser.parse_args()
 

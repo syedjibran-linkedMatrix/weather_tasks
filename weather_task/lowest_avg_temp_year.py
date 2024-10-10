@@ -1,4 +1,4 @@
-#Task: Find the year with lowest temperature average
+# Task: Find the year with lowest temperature average
 import pandas as pd
 from ArgParser_class import ArgParser
 
@@ -17,8 +17,9 @@ start_date = pd.to_datetime(args.start_date)
 end_date = pd.to_datetime(args.end_date)
 df_filtered = df[(df['Date.Full'] >= start_date) & (df['Date.Full'] <= end_date)]
 
+
 # Extract the year from the date
-df_filtered.loc[:, 'Year'] = df_filtered['Date.Full'].dt.year
+df_filtered['Year'] = df_filtered['Date.Full'].dt.year
 
 # Calculate the average temperature for each year
 yearly_avg_temp = df_filtered.groupby('Year')['Data.Temperature.Avg Temp'].mean().reset_index()
@@ -44,4 +45,3 @@ output_data.to_csv(args.output_file, index=False)
 
 # Print a success message
 print(f"Results exported to {args.output_file}")
-

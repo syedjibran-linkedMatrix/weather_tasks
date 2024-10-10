@@ -2,6 +2,7 @@
 import pandas as pd
 from ArgParser_class import ArgParser
 
+# Parse command-line arguments
 args_parser = ArgParser()
 args = args_parser.parse_args()
 
@@ -10,7 +11,6 @@ df = pd.read_csv(args.input_file)
 
 # Convert date column to datetime
 df['Date.Full'] = pd.to_datetime(df['Date.Full'])
-
 
 # Filter by date range
 start_date = pd.to_datetime(args.start_date)
@@ -26,6 +26,7 @@ def find_averages(df):
     
     return avg_max_temp, avg_min_temp, avg_wind_dir, avg_wind_speed
 
+# Calculate the averages
 avg_max_temp, avg_min_temp, avg_wind_dir, avg_wind_speed = find_averages(df_filtered)
 
 # Export the results to a CSV file
@@ -37,5 +38,5 @@ avg_data = pd.DataFrame({
 })
 avg_data.to_csv(args.output_file, index=False)
 
-
-
+# Print success message
+print(f"Averages exported to {args.output_file}")
