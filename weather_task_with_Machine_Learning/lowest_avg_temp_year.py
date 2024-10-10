@@ -22,6 +22,7 @@ df_filtered = df[(df['Date.Full'] >= start_date) & (df['Date.Full'] <= end_date)
 df_filtered['Year'] = df_filtered['Date.Full'].dt.year
 
 # Calculate the average temperature for each year
+# Groups the filtered DataFrame by the 'Year' column and calculates the average of the 'Data.Temperature.Avg Temp' column for each year.
 yearly_avg_temp = df_filtered.groupby('Year')['Data.Temperature.Avg Temp'].mean().reset_index()
 
 # Find the year with the lowest average temperature
@@ -34,7 +35,7 @@ lowest_avg_temp_value = lowest_avg_temp_row['Data.Temperature.Avg Temp']
 # Prepare data for exporting
 output_data = pd.DataFrame({
     'Year': [lowest_avg_temp_year],
-    'AverageTemperature': [lowest_avg_temp_value]
+    'LowestAverageTemperature': [lowest_avg_temp_value]
 })
 
 # Export the results to a CSV file
