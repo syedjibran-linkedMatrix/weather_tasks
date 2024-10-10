@@ -39,4 +39,5 @@ avg_data = pd.DataFrame({
 avg_data.to_csv(args.output_file, index=False)
 
 # Print success message
+print(f"Results are: {avg_data.to_string(index=False)}")
 print(f"Averages exported to {args.output_file}")

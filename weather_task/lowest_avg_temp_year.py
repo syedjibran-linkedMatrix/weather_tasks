@@ -31,9 +31,6 @@ lowest_avg_temp_row = yearly_avg_temp.loc[yearly_avg_temp['Data.Temperature.Avg 
 lowest_avg_temp_year = lowest_avg_temp_row['Year']
 lowest_avg_temp_value = lowest_avg_temp_row['Data.Temperature.Avg Temp']
 
-# Print the result
-print(f"Year with lowest average temperature: {lowest_avg_temp_year} with an average temperature of {lowest_avg_temp_value:.2f}°C")
-
 # Prepare data for exporting
 output_data = pd.DataFrame({
     'Year': [lowest_avg_temp_year],
@@ -42,6 +39,9 @@ output_data = pd.DataFrame({
 
 # Export the results to a CSV file
 output_data.to_csv(args.output_file, index=False)
+
+# Print the result
+print(f"Year with lowest average temperature: {lowest_avg_temp_year} with an average temperature of {lowest_avg_temp_value:.2f}°C")
 
 # Print a success message
 print(f"Results exported to {args.output_file}")

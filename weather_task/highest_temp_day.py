@@ -37,5 +37,6 @@ output_data = pd.DataFrame({
 # Export the results to a CSV file
 output_data.to_csv(args.output_file, index=False)
 
+print(f"Result is: {output_data.to_string(index = False)}")
 # Print a success message
 print(f"Results exported to {args.output_file}")
