@@ -41,3 +41,5 @@ avg_data.to_csv(args.output_file, index=False)
 # Print success message
 print(f"Results are: {avg_data.to_string(index=False)}")
 print(f"Averages exported to {args.output_file}")
+
+# 66.376355                  45.936199               18.759771            6.307391

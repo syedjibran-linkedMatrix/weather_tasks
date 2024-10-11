@@ -25,5 +25,4 @@ if __name__ == "__main__":
     args = arg_parser.parse_args()
 
     
-#/bin/python3 /home/lm/Downloads/weather_tasks/weather_task/highest_temp_day.py --start-date 2016-01-03 --end-date 2016-12-25 --input-file /home/lm/Downloads/weather_1.csv --output-file /home/lm/Downloads/output.csv
-
+#--start-date 2016-01-03 --end-date 2016-12-25 --input-file /home/lm/Downloads/weather_1.csv --output-file /home/lm/Downloads/output.csv
