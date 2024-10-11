@@ -26,5 +26,5 @@ if __name__ == "__main__":
     args = arg_parser.parse_args()
 
     
-#--start-date 2016-01-03 --end-date 2016-12-25 --input-file /home/lm/Downloads/weather_1.csv --output-file /home/lm/Downloads/output.csv
+
 
