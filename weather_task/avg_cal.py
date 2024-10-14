@@ -54,7 +54,7 @@ class WeatherDataProcessor:
 
     def export_results(self):
         """Export the calculated averages to a CSV file."""
-        if self.averages:
+        if self.averages: #if averages are not none
             try:
                 with open(self.output_file, mode='w') as outfile:
                     writer = csv.writer(outfile)
