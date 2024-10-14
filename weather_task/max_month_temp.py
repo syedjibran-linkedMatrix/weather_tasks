@@ -60,7 +60,7 @@ class MonthlyTemperatureAnalyzer:
                 highest_avg_temp = avg_temp
                 highest_month = (year, month)
 
-        return highest_month, highest_avg_temp
+        return highest_month, highest_avg_temp #((year, month), highestAvgTemp)
 
     def export_to_csv(self, month, avg_temp):
         """Export the month and its average temperature to a CSV file."""

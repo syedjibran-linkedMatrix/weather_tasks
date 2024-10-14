@@ -69,7 +69,7 @@ class WeatherDataProcessor:
         else:
             print("No data available for the given date range.") #if start date or end date is not in the dataset
 
-def main():
+if __name__ == "__main__":  #checks whether current file code is running as a main program --> dunder method
     # Parse command-line arguments
     args_parser = ArgParser()
     args = args_parser.parse_args()
@@ -83,5 +83,3 @@ def main():
     # Export results to CSV
     processor.export_results()
 
-if __name__ == "__main__":  #checks whether current file code is running as a main program --> dunder method
-    main()
