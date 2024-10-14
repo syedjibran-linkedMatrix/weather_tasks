@@ -1,3 +1,4 @@
+# Task: Find average temperature and wind data, and export to CSV
 import csv
 from datetime import datetime
 from ArgParser_class import ArgParser
