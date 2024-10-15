@@ -30,10 +30,12 @@ class ArgParser:
         except ValueError as e:
             self.parser.error(f"Invalid date format: {e}")
 
+        # Check if start date is greater than end date
+        if args.start_date > args.end_date:
+            self.parser.error("Start date must be less than or equal to end date.")
+
         # Check if input file exists
         if not os.path.isfile(args.input_file):
             self.parser.error(f"Input file '{args.input_file}' does not exist.")
 
         return args
-
-
