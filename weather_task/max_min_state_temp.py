@@ -1,84 +1,100 @@
 # Task: Find the state with maximum temperature, maximum wind speed, minimum temperature, and minimum wind speed
 import csv
+import logging
 from datetime import datetime
 from ArgParser_class import ArgParser
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class StateWeatherAnalyzer:
     def __init__(self, input_file, start_date, end_date, output_file):
         self.input_file = input_file
-        self.start_date = datetime.strptime(start_date, '%Y-%m-%d')
-        self.end_date = datetime.strptime(end_date, '%Y-%m-%d')
+        self.start_date = start_date
+        self.end_date = end_date
         self.output_file = output_file
+        self.filtered_data = []  # Store relevant rows with necessary data
 
     def read_filtered_data(self):
-        """Read the CSV file and yield rows within the specified date range."""
+        """Read the CSV file and store relevant rows within the specified date range."""
         try:
             with open(self.input_file) as csvfile:
-                reader = csv.DictReader(csvfile) #read data in key value pairs
+                reader = csv.DictReader(csvfile)  # Read data in key-value pairs
                 for row in reader:
                     try:
                         date = datetime.strptime(row['Date.Full'], '%Y-%m-%d')
                         if self.start_date <= date <= self.end_date:
-                            yield row
+                            # Store only relevant fields, filling missing values with 0.0
+                            max_temp = row.get('Data.Temperature.Max Temp')
+                            min_temp = row.get('Data.Temperature.Min Temp')
+                            wind_speed = row.get('Data.Wind.Speed')
+
+                            # Fill missing values with 0.0 and convert to float
+                            data = {
+                                'city': row.get('Station.City', 'N/A'),
+                                'location': row.get('Station.Location', 'N/A'),
+                                'code': row.get('Station.Code', 'N/A'),
+                                'state': row.get('Station.State', 'N/A'),
+                                'max_temp': float(max_temp) if max_temp is not None else 0.0,
+                                'min_temp': float(min_temp) if min_temp is not None else 0.0,
+                                'wind_speed': float(wind_speed) if wind_speed is not None else 0.0
+                            }
+                            self.filtered_data.append(data)
                     except ValueError as e:
-                        print(f"Skipping row due to date parsing error: {e}")
+                        logging.warning(f"Skipping row due to date parsing error: {e}")
         except FileNotFoundError:
-            print(f"Error: File {self.input_file} not found.")
-            return
+            logging.error(f"Error: File {self.input_file} not found.")
+        except Exception as e:
+            logging.error(f"Unexpected error while reading file: {e}")
 
     def find_extreme_values(self):
         """Find the states with maximum/minimum temperature and wind speed."""
         max_temp = max_wind = float('-inf') 
         min_temp = min_wind = float('inf')
 
-        max_temp_row = max_wind_row = min_temp_row = min_wind_row = None  #These store the rows with the extreme values
+        max_temp_row = max_wind_row = min_temp_row = min_wind_row = None  # Store rows with extreme values
 
-        for row in self.read_filtered_data(): #iterate over rows
-            try:
-                #converting values from string to float
-                temp_max = float(row['Data.Temperature.Max Temp'])
-                temp_min = float(row['Data.Temperature.Min Temp'])
-                wind_speed = float(row['Data.Wind.Speed'])
+        for row in self.filtered_data:  # Iterate over relevant rows
+            # Extract relevant values from filtered data
+            temp_max = row['max_temp']
+            temp_min = row['min_temp']
+            wind_speed = row['wind_speed']
 
-                #If the current row's max temperature is greater than max_temp, update max_temp and store the row.
-                if temp_max > max_temp:
-                    max_temp = temp_max
-                    max_temp_row = row
-                #If the current row's min temperature is smaller than min_temp, update min_temp and store the row.
-                if temp_min < min_temp:
-                    min_temp = temp_min
-                    min_temp_row = row
-                #If the current row's wind speed is greater than max_wind, update max_wind and store the row.
-                if wind_speed > max_wind:
-                    max_wind = wind_speed
-                    max_wind_row = row
-                #If the current row's wind speed is smaller than min_wind, update min_wind and store the row.
-                if wind_speed < min_wind:
-                    min_wind = wind_speed
-                    min_wind_row = row
-            except ValueError as e:
-                print(f"Skipping row due to data conversion error: {e}")
+            # Update max temperature and store corresponding row
+            if temp_max > max_temp:
+                max_temp = temp_max
+                max_temp_row = row
+            # Update min temperature and store corresponding row
+            if temp_min < min_temp:
+                min_temp = temp_min
+                min_temp_row = row
+            # Update max wind speed and store corresponding row
+            if wind_speed > max_wind:
+                max_wind = wind_speed
+                max_wind_row = row
+            # Update min wind speed and store corresponding row
+            if wind_speed < min_wind:
+                min_wind = wind_speed
+                min_wind_row = row
 
         return max_temp_row, max_wind_row, min_temp_row, min_wind_row
 
     def extract_data(self, rows):
         """Extract relevant information from the given rows."""
         categories = ['Max Temperature', 'Max Wind Speed', 'Min Temperature', 'Min Wind Speed']
-        data = [] #This list will store the extracted data for each category.
+        data = []  # List to store extracted data for each category
 
-        for category, row in zip(categories, rows):  #zip combines two iterable such as data and categories
+        for category, row in zip(categories, rows):  # Combine categories with corresponding rows
             if row:
                 data.append([      
                     category,
-                    row['Station.City'],
-                    row['Station.Location'],
-                    row['Station.Code'],
-                    row['Station.State']
+                    row['city'],
+                    row['location'],
+                    row['code'],
+                    row['state']
                 ])
-
-                #data = [['Max Temperature', 'New York', 'NY-001', 'NYC001', 'New York'],['Max Wind Speed', 'Chicago', 'IL-003', 'CHI003', 'Illinois']]
             else:
-                print(f"No data available for {category}.")
+                logging.warning(f"No data available for {category}.")
                 data.append([category, 'N/A', 'N/A', 'N/A', 'N/A'])
 
         return data
@@ -91,21 +107,22 @@ class StateWeatherAnalyzer:
                 writer.writerow(['Category', 'City', 'Location', 'Code', 'State'])  # Header
                 writer.writerows(data)  # Write rows
 
-            print(f"Results exported to {self.output_file}")
+            logging.info(f"Results exported to {self.output_file}")
         except Exception as e:
-            print(f"Error exporting results: {e}")
+            logging.error(f"Error exporting results: {e}")
 
     def analyze(self):
         """Run the analysis and export the results."""
+        self.read_filtered_data()
         rows = self.find_extreme_values()
         data = self.extract_data(rows)
-        print(f"Result is: {data}")
+        logging.info(f"Result is: {data}")
         self.export_to_csv(data)
 
 if __name__ == "__main__":
     # Parse command-line arguments
-    args_parser = ArgParser()
-    args = args_parser.parse_args()
+    arg_parser = ArgParser()
+    args = arg_parser.parse_args()
 
     # Create an instance of StateWeatherAnalyzer
     analyzer = StateWeatherAnalyzer(args.input_file, args.start_date, args.end_date, args.output_file)

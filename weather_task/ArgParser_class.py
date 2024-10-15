@@ -36,7 +36,4 @@ class ArgParser:
 
         return args
 
-# To test this file independently we are using main --> dunder method
-if __name__ == "__main__":
-    arg_parser = ArgParser()
-    args = arg_parser.parse_args()
+

@@ -1,4 +1,3 @@
-# Task: Find maximum temperature and its corresponding location and state
 import csv
 from datetime import datetime
 from ArgParser_class import ArgParser
@@ -6,9 +5,10 @@ from ArgParser_class import ArgParser
 class MaxTemperatureAnalyzer:
     def __init__(self, input_file, start_date, end_date, output_file):
         self.input_file = input_file
-        self.start_date = datetime.strptime(start_date, '%Y-%m-%d')
-        self.end_date = datetime.strptime(end_date, '%Y-%m-%d')
+        self.start_date = start_date
+        self.end_date = end_date
         self.output_file = output_file
+        self.filtered_data = []  # Store relevant rows
 
     def read_filtered_data(self):
         """Read the CSV file and yield rows within the specified date range."""
@@ -19,7 +19,7 @@ class MaxTemperatureAnalyzer:
                     try:
                         date = datetime.strptime(row['Date.Full'], '%Y-%m-%d')
                         if self.start_date <= date <= self.end_date:
-                            yield row
+                            self.filtered_data.append(row)  # Collect relevant rows
                     except ValueError as e:
                         print(f"Skipping row due to date parsing error: {e}")
         except FileNotFoundError:
@@ -31,9 +31,12 @@ class MaxTemperatureAnalyzer:
         max_temp = float('-inf')
         max_temp_row = None
 
-        for row in self.read_filtered_data():
+        for row in self.filtered_data:
             try:
-                temp = float(row['Data.Temperature.Max Temp'])
+                # Convert temperature to float, fill with 0.0 if missing
+                temp = float(row.get('Data.Temperature.Max Temp', 0.0))
+                
+                # Update max temperature and corresponding row if found a new max
                 if temp > max_temp:
                     max_temp = temp
                     max_temp_row = row
@@ -56,6 +59,7 @@ class MaxTemperatureAnalyzer:
 
     def analyze(self):
         """Run the analysis and export the results."""
+        self.read_filtered_data()  # Read and filter data
         max_temp, max_temp_row = self.find_max_temperature()
 
         if max_temp_row is not None:
